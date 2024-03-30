@@ -1,0 +1,8 @@
+male
+female
+vegetarian
+non-vegetarian
+smoker
+non-smoker
+alchoholic
+non-alchoholic
