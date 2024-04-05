@@ -60,10 +60,35 @@ const Vacancy = () => {
     setSelectedOptions(newSelectedOptions);
   };
 
-  const handleSubmit = (e) => {
+  const  validateForm = (formData) => {
+    /* required elements should not be empty */
+    const required = [
+        "from",
+        "to",
+        "requirements"
+    ];
+
+    required.forEach(element => {
+        if (!formData[element]) throw new Error(`${element} is required`);
+    });
+};
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateVacancy({...formState, requirements: selectedOptions.join(', ')}));
-    navigate('/create-vacancy-request/community');
+    const newFormState = {...formState, requirements: selectedOptions.join(', ')}
+    let isValid = true;
+    try{
+        await validateForm(newFormState);
+    }
+    catch (err) {
+        isValid = false;
+        alert(err.message);
+    }
+    
+    if (isValid){
+        dispatch(updateVacancy(newFormState));
+        navigate('/create-vacancy-request/community');
+    }
   };
 
   return (
@@ -72,7 +97,7 @@ const Vacancy = () => {
         <h2 className="text-lg md:text-2xl font-bold mb-4">Vacancy Details Form</h2>
         <form className="vacancy-details-container" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="from" className="block text-sm font-medium text-gray-700">From</label>
+            <label htmlFor="from" className="block text-sm font-medium text-gray-700">From<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="date" 
               name="from" 
@@ -84,7 +109,7 @@ const Vacancy = () => {
           </div>
 
           <div className="mb-4">
-              <label htmlFor="to" className="block text-sm font-medium text-gray-700">To</label>
+              <label htmlFor="to" className="block text-sm font-medium text-gray-700">To<span className='text-rose-600 ml-1'>*</span></label>
               <input 
                 type="date" 
                 name="to" 
@@ -95,7 +120,7 @@ const Vacancy = () => {
               />
           </div>
           <div className="mb-4">
-            <label htmlFor="tenantRequirements" className="block text-sm font-medium text-gray-700">Tenant Requirements</label>
+            <label htmlFor="tenantRequirements" className="block text-sm font-medium text-gray-700">Tenant Requirements<span className='text-rose-600 ml-1'>*</span></label>
             <div className="relative">
               <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="mt-1 block bg-white w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-left">
                 {selectedOptions.length > 0 ? selectedOptions.join(', ') : "Select Tenant Requirements"}

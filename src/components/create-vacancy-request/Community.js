@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
-import { updateCommunity } from '../../features/vacancySlice'; 
+import { updateCommunity } from '../../features/vacancySlice';
+import generateAddress from '../../utilities/generateAddress';
 
 const Community = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,8 @@ const Community = () => {
   const [fileContent, setFileContent] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const autocompleteInput = useRef(null);
+  let autocomplete = null;
 
   useEffect(() => {
     const filePath = 'http://localhost:3000/community-amenities-options.txt';
@@ -42,6 +45,34 @@ const Community = () => {
     setSelectedAmenities(community.amenities ? community.amenities.split(', ') : []);
   }, [community]);
 
+  useEffect(() => {
+        console.log("window.google ", window.google);
+        autocomplete = new window.google.maps.places.Autocomplete(
+            autocompleteInput.current,
+            {
+                componentRestrictions: { country: "us" },
+                fields: ["place_id", "address_components", "name", "photos"],
+                types:["establishment"]
+            }
+        );
+
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            // Handle the selected place
+            const newFormState = {
+                ...formState,
+                ...generateAddress(place.address_components),
+                title: place.name,
+                place_id: place.place_id,
+                photos: place.photos.map((photo)=> [photo.width, photo.height, photo.getUrl()]) 
+            }
+            
+            
+            setFormState(newFormState);
+        });
+    
+}, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedFormState = { ...formState, [name]: value };
@@ -61,20 +92,61 @@ const Community = () => {
     setSelectedAmenities(newSelectedAmenities);
   };
 
-//   const 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const  validateForm = (formData) => {
+        /* required elements should not be empty */
+        const required = [
+            "housingType",
+            "title",
+            "address",
+            "city",
+            "state",
+            "postal_code",
+            "amenities"
+        ];
+
+        required.forEach(element => {
+            if (!formData[element]) throw new Error(`${element} is required`);
+        });
+
+        /* elements that should only have didgits */
+        const digits = [
+            "postal_code",
+            "averageRent",
+        ]
+
+        digits.forEach(element => {
+            if(!/^\d*$/.test(formData[element])) throw new Error(`${element} should only have digits!`);
+        });
+    };
+
+  const handleSubmit = async (isNext) => {
     const newFormState = {...formState, amenities: selectedAmenities.join(', ')}
-    // await validateForm(newFormState);
-    dispatch(updateCommunity(newFormState));
-    navigate('/create-vacancy-request/vacancy');
+    let isValid = true;
+    try{
+        await validateForm(newFormState);
+    }
+    catch (err) {
+        isValid = false;
+        alert(err.message);
+    }
+    
+    if (isValid){
+        dispatch(updateCommunity(newFormState));
+        if (isNext){
+            navigate('/create-vacancy-request/room');
+        }
+        else{
+            navigate('/create-vacancy-request/vacancy');
+        }
+        
+    }
   };
 
   return (
     <div className="p-4 md:flex md:align-center md:justify-center md:p-8">
       <div className="md:w-3/6">
         <h2 className="text-lg md:text-2xl font-bold mb-4">Community Details Form</h2>
-        <form className="vacancy-details-container" onSubmit={handleSubmit}>
+        <form className="vacancy-details-container">
         <div className="mb-4 flex flex-col">
             <label htmlFor="from" className="block text-sm font-medium text-gray-700">Housing Type <span className='text-rose-600 ml-1'>*</span></label>
             <div className='flex flex-row justify-start'>
@@ -113,7 +185,8 @@ const Community = () => {
               id="title"
               placeholder='Enter community title'
               value={formState.title}
-              onChange={handleChange} 
+              onChange={handleChange}
+              ref={autocompleteInput}
               className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
@@ -132,7 +205,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">city<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="city" className="block text-sm font-medium text-gray-700">City<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
               name="city" 
@@ -158,13 +231,13 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700">Postal Code<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
-              name="postalCode" 
-              id="postalCode"
+              name="postal_code" 
+              id="postal_code"
               placeholder='Enter postal code'
-              value={formState.postalCode}
+              value={formState.postal_code}
               onChange={handleChange} 
               className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
@@ -237,9 +310,12 @@ const Community = () => {
             />
           </div>
 
-          <div className="bottom-buttons mt-4">
-            <button type="submit" className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-              Next
+          <div className="bottom-buttons w-full mt-4 flex justify-around">
+            <button type="button" onClick={()=>handleSubmit(false)} className="my-3 py-3  mr-2 flex-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                Previous
+            </button>
+            <button type="button" onClick={()=>handleSubmit(true)} className="my-3 py3 flex-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                Next
             </button>
           </div>
         </form>

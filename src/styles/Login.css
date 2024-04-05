@@ -1,0 +1,170 @@
+.login-main{
+    width: 100%;
+    height: 100vh;
+    background: rgb(199, 250, 216);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+  }
+  
+  .content-wrapper{
+    position: relative;
+    width: 80%;
+    height: 70vh;
+    /* border: 1px solid black; */
+    display: flex;
+    border-radius: 20px;
+    
+  }
+  
+  
+  
+  .left-wrapper{
+    position: relative;
+    background: rgb(234, 253, 240);
+    width: 50%;
+    height: 100%;
+    display: flex;
+    /* border: 1px solid black; */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .left-content-wrapper{
+    position: relative;
+    width: 70%;
+    height: 80%; 
+    /* border: 1px solid brown; */
+  
+  }
+  
+  .image-wrapper{
+    position: relative;
+    width: 100%;
+    height: 80%;
+  }
+  
+  .image-wrapper img{
+    position: relative;
+    width: 100%;
+    height:100%
+  }
+  
+  .right-wrapper{
+    position: relative;
+    background: rgb(249, 255, 251);
+    width: 50%;
+    height: 100%;
+    display: flex;
+    /* border: 1px solid black; */
+    justify-content: center;
+    align-items: center;
+  }
+  .right-content-wrapper {
+    position: relative;
+    width: 60%; 
+    height: 70%;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    flex-direction: column;
+  }
+  
+  .user-email, .password{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    width: 100%;
+  }
+  
+  .logo-title h2 {
+    color: #333; 
+    margin-bottom: 2rem;
+  }
+  
+  .sign-in-button{
+    display: flex;
+    justify-content: center;
+    /* padding: 0px 70px; */
+  }
+  .sign-in-button button {
+    background-color: #000;
+    color: #fff; 
+    width: 100%;
+    padding: 10px 70px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .sign-in-button button:hover {
+    background-color: #444; 
+  }
+  
+  .create-account a {
+    color: #0077ff;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem; 
+  }
+  
+  .create-account a:hover {
+    text-decoration: underline;
+  }
+  
+  .sign-in-with-google{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+  }
+  .sign-in-with-google button{
+    text-decoration: none;
+    background: none;
+    border: none;
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+    /* text-align: center; */
+    border: 2px solid rgb(10, 166, 245);
+    border-radius: 5px;
+    padding: 10px 20px;
+    justify-content: center;
+  }
+  
+  .sign-in-with-google button:hover{
+    background: black;
+    color: rgb(175, 1, 140);
+  }
+  
+  .sign-in-with-google button img{
+    width: 20px;
+    margin-right: 10px;
+  }
+  
+  @media screen and (max-width: 780px) {
+    .login-main{
+      overflow-y: scroll;
+    }
+    .content-wrapper {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: fit-content;
+      /* overflow-y: scroll; */
+    }
+    .left-wrapper, .right-wrapper{
+      padding: 20px 30px;
+      width: 100%;
+      height:none;
+    }
+  }
+  
+  .or{
+    display: flex;
+    justify-content: center;;
+  }
+  
