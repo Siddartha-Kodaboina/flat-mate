@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 const handleVacancyRequestSubmit = async (vacancy) => {
     try {
         console.log('vacancy request ', vacancy);
-        const baseUrl = process.env.REACT_APP_NODE_ENV === "development" ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_PRODUCTION_BASE_URL;
-        const response = await fetch(`${baseUrl}/api/v1/vacancy-requests/`, {
+        const nodeBaseUrl = process.env.REACT_APP_NODE_ENV === "development" ? process.env.REACT_APP_LOCAL_NODE_BASE_URL : process.env.REACT_APP_PRODUCTION_NODE_BASE_URL;
+        const response = await fetch(`${nodeBaseUrl}/api/v1/vacancy-requests/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

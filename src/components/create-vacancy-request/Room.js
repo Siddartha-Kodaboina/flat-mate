@@ -37,13 +37,13 @@ const Room = () => {
 
   //Confirm submit pop up
   const [isConfirmSubmitOpen, setIsConfirmSubmitOpen] = useState(false);
-
+  const reactBaseUrl =  process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_REACT_BASE_URL: process.env.REACT_APP_PRODUCTION_REACT_BASE_URL;
   useEffect(() => {
     
       const filePaths = [
-        'http://localhost:3000/room-amenities-options.txt',
-        'http://localhost:3000/room-do.txt',
-        'http://localhost:3000/room-dont.txt'
+        `${reactBaseUrl}/room-amenities-options.txt`,
+        `${reactBaseUrl}/room-do.txt`,
+        `${reactBaseUrl}/room-dont.txt`
       ];
     
       Promise.all(filePaths.map(filePath =>

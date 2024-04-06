@@ -12,10 +12,11 @@ const Vacancy = () => {
   const [fileContent, setFileContent] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const reactBaseUrl =  process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_REACT_BASE_URL: process.env.REACT_APP_PRODUCTION_REACT_BASE_URL;
+  
   useEffect(() => {
-    const filePath = 'http://localhost:3000/tenant-requirements.txt';
-
+    const filePath = `${reactBaseUrl}/tenant-requirements.txt`;
+    console.log("requirements", filePath);
     fetch(filePath)
       .then(response => response.text())
       .then(text => {

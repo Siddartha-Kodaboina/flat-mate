@@ -18,7 +18,7 @@ function App() {
   const user = useFirebaseUser();
   const maxWaitTimes = 10;
   let waitTimes = 0;
-  const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL: process.env.REACT_APP_SERVER_BASE_URL;
+  const nodeBaseUrl = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_NODE_BASE_URL: process.env.REACT_APP_PRODUCTION_NODE_BASE_URL;
   useEffect(() => {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_FIREBASE_API_KEY}&libraries=places`;

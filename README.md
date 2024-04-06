@@ -1,3 +1,39 @@
+# Setting the self hosted server with AWS EC2
+
+## Create an EC2 instance
+- create a security group that all inbound traffic on ssh(22), https(443), http(80) tracfic for all 0.0.0.0/0 
+
+## Install Docker
+
+###  `docker --version`
+
+### install Docker
+
+```
+sudo apt-get update
+sudo apt-get install docker.io -y
+```
+
+### Start docker 
+
+`sudo systemctl start docker`
+
+### Change the permissions, enable the docker and check it's version
+```
+sudo chmod 666 /var/run/docker.sock
+sudo systemctl enable docker
+docker --version
+```
+
+### Create a hello world docker image
+`sudo docker run hello-world`
+
+### List running docker images 
+`docker ps`
+`docker ps -a`
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

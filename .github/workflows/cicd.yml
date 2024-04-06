@@ -1,0 +1,42 @@
+name: Build and Deploy Client Side React Application
+
+on:
+  push:
+    branches:
+      - mern-ec2-docker
+      - master
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build docker image
+        run: docker build -t stevesiddu49/flat-mate . 
+          --build-arg REACT_APP_NODE_ENV='production'
+          --build-arg REACT_APP_PRODUCTION_REACT_BASE_URL='${{ secrets.PRODUCTION_REACT_BASE_URL }}'
+          --build-arg REACT_APP_PRODUCTION_NODE_BASE_URL='${{ secrets.PRODUCTION_NODE_BASE_URL }}'
+          --build-arg REACT_APP_FIREBASE_API_KEY='${{ secrets.FIREBASE_API_KEY }}'
+          --build-arg REACT_APP_FIREBASE_AUTH_DOMAIN='${{ secrets.FIREBASE_AUTH_DOMAIN }}'
+          --build-arg REACT_APP_FIREBASE_PROJECT_ID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          --build-arg REACT_APP_FIREBASE_STORAGE_BUCKET='${{ secrets.FIREBASE_STORAGE_BUCKET }}'
+          --build-arg REACT_APP_FIREBASE_MESSAGING_SENDER_ID='${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}'
+          --build-arg REACT_APP_FIREBASE_APP_ID='${{ secrets.FIREBASE_APP_ID }}'
+          --build-arg REACT_APP_FIREBASE_MEASUREMENT_ID='${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+      - name: Publish image to dockerhub
+        run: docker push stevesiddu49/flat-mate:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Current working directory
+        run: pwd
+      - name: Pull image from dockerhub
+        run: docker pull stevesiddu49/flat-mate:latest
+      - name: Delete old Container
+        run: docker rm -f flat-mate-container
+      - name: Run Docker Container
+        run: docker run -d -p 3000:80 --name flat-mate-container stevesiddu49/flat-mate

@@ -16,9 +16,9 @@ const Community = () => {
   const dropdownRef = useRef(null);
   const autocompleteInput = useRef(null);
   let autocomplete = null;
-
+  const reactBaseUrl =  process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_REACT_BASE_URL: process.env.REACT_APP_PRODUCTION_REACT_BASE_URL;
   useEffect(() => {
-    const filePath = 'http://localhost:3000/community-amenities-options.txt';
+    const filePath = `${reactBaseUrl}/community-amenities-options.txt`;
 
     fetch(filePath)
       .then(response => response.text())

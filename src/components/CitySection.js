@@ -7,6 +7,7 @@ const CitySection = () => {
   const { width } = useWindowSize();
   const rightArrow = '>';
   const leftArrow = '<';
+  const reactBaseUrl =  process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_REACT_BASE_URL: process.env.REACT_APP_PRODUCTION_REACT_BASE_URL;
   useEffect(() => {
     const fetchedCities = [
       'austin.jpeg', 
@@ -65,7 +66,7 @@ const CitySection = () => {
           <div key={index} className=" flex-shrink-0">
             <div className="
                 w-full h-full rounded-md p-2 m-2 flex justify-center relative group">
-              <img className="w-[160px] h-[260px] object-cover rounded-md" src={`./images/cities/${city}`} alt={`City ${index}`} />
+              <img className="w-[160px] h-[260px] object-cover rounded-md" src={`${reactBaseUrl}/images/cities/${city}`} alt={`City ${index}`} />
                         <div className="relative w-[160px] h-[260px]  -ml-[160px] z-[10] 
                             inset-0 bg-black bg-opacity-50 opacity-75 
                             hover:opacity-0 transition-opacity duration-300 rounded-md"></div>
