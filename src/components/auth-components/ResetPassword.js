@@ -10,10 +10,7 @@ const ResetPassword = () => {
     })
     const [reset, setReset] = useState(false);
     const searchParams = new URLSearchParams(window.location.search)
-    // const [searchParams, setSearchParams] = useSearchParams();
     let oobCode= searchParams.get('oobCode');
-    // console.log("queryParameters ", searchParams, oobCode);
-    // console.log(searchParams);
 
     const handleChange = (e) => {
         setCredentials({
@@ -28,8 +25,6 @@ const ResetPassword = () => {
 
     const handleClick = (button_type) => {
         if (!validCredentials()){
-            console.log(credentials);
-            console.log(oobCode);
             alert("Passwords did not match 🙃");
             return;
         }

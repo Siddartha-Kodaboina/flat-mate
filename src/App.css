@@ -33,3 +33,6 @@ button.secondary {
 .icon {
   color: var(--quaternary-color);
 }
+.exp{
+  color: #2c3336;
+}

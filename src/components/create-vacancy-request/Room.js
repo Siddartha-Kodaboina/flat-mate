@@ -12,7 +12,6 @@ const Room = () => {
   const { room } = useSelector((state) => state.vacancy);
   const vacancy = useSelector((state) => state.vacancy);
   const [vacancyStore, setVacancyStore] = useState(vacancy);
-  console.log(room);
   const [formState, setFormState] = useState(room);
   const [selectedAmenities, setSelectedAmenities] = useState(room.amenities ? room.amenities.split(', ') : []);
   const [selectedDo, setSelectedDo] = useState(room.do ? room.do.split(', ') : []);
@@ -195,10 +194,8 @@ const Room = () => {
   const handleConfirm = async () => {
     setIsConfirmSubmitOpen(false);
     const result = await handleVacancyRequestSubmit({ ...vacancyStore, customer: user });
-    console.log(result);
     if (result) {
         navigate('/');
-        console.log(vacancy);
     } else {
         alert(result);
     }

@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useWindowSize from '../hooks/useWindowSize';
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+
 
 const CitySection = () => {
+  const navigate = useNavigate();
   const [cities, setCities] = useState([]);
   const sliderRef = useRef(null);
   const { width } = useWindowSize();
@@ -52,6 +56,10 @@ const CitySection = () => {
       .join(' ');
   };
 
+  const handleCityClick = (city) => {
+    navigate(`/communities?city=${city}`);
+  }
+
   return (
     <div className="relative flex items-center overflow-hidden my-8">
       <button
@@ -63,21 +71,25 @@ const CitySection = () => {
       </button>
       <div ref={sliderRef} className="flex w-full overflow-hidden scroll-smooth">
         {cities.map((city, index) => (
+          
           <div key={index} className=" flex-shrink-0">
             <div className="
-                w-full h-full rounded-md p-2 m-2 flex justify-center relative group">
+                w-full h-full rounded-md p-2 m-2 flex justify-center relative group ">
               <img className="w-[160px] h-[260px] object-cover rounded-md" src={`${reactBaseUrl}/images/cities/${city}`} alt={`City ${index}`} />
-                        <div className="relative w-[160px] h-[260px]  -ml-[160px] z-[10] 
-                            inset-0 bg-black bg-opacity-50 opacity-75 
-                            hover:opacity-0 transition-opacity duration-300 rounded-md"></div>
+              <div className="relative w-[160px] h-[260px]  -ml-[160px] z-[10] 
+                  inset-0 bg-black bg-opacity-50 opacity-75 cursor-pointer border-4 border-red-500 
+                  hover:opacity-0 transition-opacity duration-300 rounded-md"
+                  onClick={()=>handleCityClick(capitalizeWords(city.split('.')[0]))}>
+                    
+              </div>
                         
-                            <p className="absolute top-[50%] left-[50%] transform 
-                                -translate-x-1/2 
-                                -translate-y-1/2 text-[#FFFFFF] text-center text-[0.9rem] font-bold 
-                                group-hover:text-white group-hover:font-extrabold 
-                                group-hover:translate-y-[70px] group-hover:pb-[1rem] transition-all duration-300">
-                                {capitalizeWords(city.split('.')[0])}
-                            </p>
+              <p className="absolute top-[50%] left-[50%] transform 
+                  -translate-x-1/2 
+                  -translate-y-1/2 text-[#FFFFFF] text-center text-[0.9rem] font-bold 
+                  group-hover:text-white group-hover:font-extrabold 
+                  group-hover:translate-y-[70px] group-hover:pb-[1rem] transition-all duration-300">
+                  {capitalizeWords(city.split('.')[0])}
+              </p>
             </div>
           </div>
             

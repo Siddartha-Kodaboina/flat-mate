@@ -16,7 +16,6 @@ const Vacancy = () => {
   
   useEffect(() => {
     const filePath = `${reactBaseUrl}/tenant-requirements.txt`;
-    console.log("requirements", filePath);
     fetch(filePath)
       .then(response => response.text())
       .then(text => {

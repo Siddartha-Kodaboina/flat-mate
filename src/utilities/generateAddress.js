@@ -14,13 +14,11 @@ const generateAddress = (address_components) => {
 
         switch (componentType) {
           case "street_number": {
-            // console.log(`street_number: ${communityDetails.address} ${component.long_name}`);
             AddressDetails.address += " " + component.long_name;
             break;
           }
 
           case "route": {
-            // console.log(`route: ${communityDetails.address} ${component.long_name}`);
             AddressDetails.address += " " + component.short_name;
             break;
           }

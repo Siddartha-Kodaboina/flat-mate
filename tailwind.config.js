@@ -4,7 +4,15 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'xs': '400px', // Custom breakpoint at 400px
+      },
+      backgroundImage: {
+        'bg-cb': 'linear-gradient(96deg, #53b2fe, #065af3)',
+      },
+
+    },
   },
   plugins: [],
 }

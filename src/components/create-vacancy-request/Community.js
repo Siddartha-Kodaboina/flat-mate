@@ -8,7 +8,6 @@ const Community = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { community } = useSelector((state) => state.vacancy);
-  console.log(community);
   const [formState, setFormState] = useState(community);
   const [selectedAmenities, setSelectedAmenities] = useState(community.amenities ? community.amenities.split(', ') : []);
   const [fileContent, setFileContent] = useState([]);
@@ -46,7 +45,6 @@ const Community = () => {
   }, [community]);
 
   useEffect(() => {
-        console.log("window.google ", window.google);
         autocomplete = new window.google.maps.places.Autocomplete(
             autocompleteInput.current,
             {
@@ -59,12 +57,13 @@ const Community = () => {
         autocomplete.addListener('place_changed', () => {
             const place = autocomplete.getPlace();
             // Handle the selected place
+            
             const newFormState = {
                 ...formState,
                 ...generateAddress(place.address_components),
                 title: place.name,
                 place_id: place.place_id,
-                photos: place.photos.map((photo)=> [photo.width, photo.height, photo.getUrl()]) 
+                photos: place.photos ? place.photos.map((photo)=> [photo.width, photo.height, photo.getUrl()]) : []
             }
             
             

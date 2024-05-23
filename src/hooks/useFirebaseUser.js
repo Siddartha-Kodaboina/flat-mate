@@ -19,7 +19,6 @@ const useFirebaseUser = () => {
       }
     });
 
-    // Make sure we un-register Firebase observers when the component unmounts.
     return () => unsubscribe();
   }, []);
 

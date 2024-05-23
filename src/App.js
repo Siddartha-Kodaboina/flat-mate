@@ -3,6 +3,9 @@ import './App.css';
 import './poppins.css';
 import Header from './components/Header';
 import Home from './components/Home';
+import City from './components/City';
+import CommunitiesList from './components/flat-listing/CommunitiesList';
+import RoomsList from './components/flat-listing/RoomsList';
 import Vacancy from './components/create-vacancy-request/Vacancy';
 import Community from './components/create-vacancy-request/Community';
 import Room from './components/create-vacancy-request/Room';
@@ -72,22 +75,17 @@ function App() {
         <div className="routes pt-[10vh]">
           <Router>
               <Routes>
-              <Route path="/" element={user ? <Home/> : <Navigate replace to="/login" />} />
-              <Route path="/create-vacancy-request/vacancy" element={user ? <Vacancy/> : <Navigate replace to="/login" />} />
-              <Route path="/create-vacancy-request/community" element={user ? <Community/> : <Navigate replace to="/login" />} />
-              <Route path="/create-vacancy-request/room" element={user ? <Room/> : <Navigate replace to="/login" />} />
-              <Route path="/login" element={!user ? <Login /> : <Navigate replace to="/" />} />
-              <Route path="/forgot-password" element={!user? <ForgotPassword/>: <Navigate replace to="/"/>}/>
-              <Route path="/reset-password" element={!user? <ResetPassword/>: <Navigate replace to="/"/>}/>
-
-              {/* <Route path="/create" element={currentUser ? <Create /> : <Navigate replace to="/login" />} />
-              <Route path="/create-accommodation" element={currentUser ? <CreateAccommodation /> : <Navigate replace to="/login" />} />
-              <Route path="/create-accommodation-request" element={currentUser ? <CreateAccommodationRequest /> : <Navigate replace to="/login" />} />
-              <Route path="/create-accommodation-request-workflow" element={currentUser ? <CreateVacancyFlow /> : <Navigate replace to="/login" />} />
-              <Route path="/settings" element={currentUser ? <Settings /> : <Navigate replace to="/login" />} />
-              <Route path="/vacancy/:id" element={currentUser ? <VacancyPage/> : <Navigate replace to="/login" />} />
-              // <Route path="/login" element={!currentUser ? <Login /> : <Navigate replace to="/" />} /> */}
-            </Routes>
+                <Route path="/" element={user ? <Home/> : <Navigate replace to="/login" />} />
+                <Route path="/city/:cityName" element={user ? <City /> : <Navigate replace to="/login" />} />
+                <Route path="/communities" element={user ? <CommunitiesList /> : <Navigate replace to="/login" />} />
+                <Route path="/rooms" element={user ? <RoomsList /> : <Navigate replace to="/login" />} />
+                <Route path="/create-vacancy-request/vacancy" element={user ? <Vacancy/> : <Navigate replace to="/login" />} />
+                <Route path="/create-vacancy-request/community" element={user ? <Community/> : <Navigate replace to="/login" />} />
+                <Route path="/create-vacancy-request/room" element={user ? <Room/> : <Navigate replace to="/login" />} />
+                <Route path="/login" element={!user ? <Login /> : <Navigate replace to="/" />} />
+                <Route path="/forgot-password" element={!user? <ForgotPassword/>: <Navigate replace to="/"/>}/>
+                <Route path="/reset-password" element={!user? <ResetPassword/>: <Navigate replace to="/"/>}/>
+              </Routes>
           </Router>
 
         </div>
