@@ -5,11 +5,13 @@ import GetIcon from '../GetIcon';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db, auth } from '../../config/firebaseConfig';
 import Loader from '../Loader';
+import useFirebaseUser from '../../hooks/useFirebaseUser';
 
 const RoomsList = () => {
   const [searchParams] = useSearchParams();
   const community_id = searchParams.get('community_id');
   const [isLoading, setIsLoading] = useState(true);
+  const user = useFirebaseUser();
   const [community, setCommunity] = useState([]);
   const [communityInfo, setCommunityInfo] = useState([]);
   const [vacancyRoomUserList, setVacancyRoomUserList] = useState([]);
@@ -139,7 +141,11 @@ const RoomsList = () => {
         }
         if (roomsData.length === undefined) {
           roomsData = [roomsData];
+          console.log("in rooms length undefined" );
         }
+        roomsData = roomsData.slice().reverse(); 
+        console.log("outside rooms length undefined" );
+        
         const tempViewMore = {};
         for (let i = 0; i < data.length; i++) {
           const creatorsData = await getCreatorsData(data[i].customerId);
@@ -388,9 +394,12 @@ const RoomsList = () => {
                         )}
                         <div className='p-2 mt-1 bg-[#2c3336] flex justify-between items-center rounded-b-md'>
                           <h3 className='p-2 text-white text-sm'>Starting from: ${vru.room.monthlyRent} + ${vru.room.utilitiesCost} utilities</h3>
-                          <div className='border-2 border-black bg-bg-cb mr-5 rounded-lg text-white cursor-pointer hover:bg-gray-800' onClick={() => handleSendMessage(vru.creator.uid)}>
-                            <h3 className='p-2 pl-3 pr-3 font-medium'>Message</h3>
-                          </div>
+                          {
+                            (user && user.uid!==vru.creator.uid) &&
+                            <div className='border-2 border-black bg-bg-cb mr-5 rounded-lg text-white cursor-pointer hover:bg-gray-800' onClick={() => handleSendMessage(vru.creator.uid)}>
+                              <h3 className='p-2 pl-3 pr-3 font-medium'>Message</h3>
+                            </div>
+                          }
                         </div>
                       </div>
                     )}
