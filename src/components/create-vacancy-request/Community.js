@@ -56,7 +56,7 @@ const Community = () => {
 
         autocomplete.addListener('place_changed', () => {
             const place = autocomplete.getPlace();
-            // Handle the selected place
+            // Handling the selected place
             
             const newFormState = {
                 ...formState,
@@ -142,8 +142,8 @@ const Community = () => {
   };
 
   return (
-    <div className="p-4 md:flex md:align-center md:justify-center md:p-8">
-      <div className="md:w-3/6">
+    <div className="flex flex-col min-h-screen justify-center items-center p-4">
+      <div className="w-full md:w-3/6">
         <h2 className="text-lg md:text-2xl font-bold mb-4">Community Details Form</h2>
         <form className="vacancy-details-container">
         <div className="mb-4 flex flex-col">

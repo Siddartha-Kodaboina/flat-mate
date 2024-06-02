@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, initializeFirestore, persistentLocalCache } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -22,4 +23,5 @@ export const auth = getAuth();
 export const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account', 'login_hint': 'user@example.com' });
 
+export const db = getFirestore(app);
 // export const signInWithGoogle = () => auth.signInWithPopup(provider);

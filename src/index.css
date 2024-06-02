@@ -21,14 +21,16 @@ code {
 .grid-item {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the content */
-  justify-content: center; /* Center vertically */
-  overflow: hidden; /* Ensures no spill over */
-  height: 320px; /* Example height, adjust based on your design needs */
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 320px;
 }
+
+
 
 .grid-image {
   width: 100%;
-  height: 100%; /* Ensures the image takes up the entire grid item space */
-  object-fit: cover; /* Keeps the aspect ratio and covers the space */
+  height: 100%;
+  object-fit: cover;
 }

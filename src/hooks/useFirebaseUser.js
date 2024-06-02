@@ -9,8 +9,6 @@ const useFirebaseUser = () => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.
-        // console.log("Details in useUser", user);
-        // console.log("user full information : ", user);
         const { uid, email, displayName, photoURL } = user;
         setCurrentUser({ uid, email, displayName, photoURL });
       } else {

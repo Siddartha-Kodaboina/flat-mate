@@ -1,20 +1,28 @@
-// This file would export signInWithGoogle function used above
-import { auth, provider } from '../config/firebaseConfig';
+import { auth, provider, db } from '../config/firebaseConfig';
 import {signInWithPopup, confirmPasswordReset, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+// Function to check if a user exists and add them to Firestore if not
+const addUserToFirestore = async (user) => {
+  const userRef = doc(db, 'users', user.uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    await setDoc(userRef, {
+      uid: user.uid,
+      displayName: user.displayName || user.email,
+      displayNameLowerCase: user.displayName.toLowerCase() || user.email,
+      email: user.email,
+      photoURL: user.photoURL || ''
+    });
+  }
+};
 
 export const signInWithGoogle = () => {
   signInWithPopup(auth, provider)
-    .then((result) => {
-      // The token you receive from the sign-in process
-      const token = result.credential.idToken;
-      // This part should be handled in authService.js but shown here for clarity
-      fetch('/api/auth/verifyToken', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token }),
-      });
+    .then(async (result) => {
+      const user = result.user;
+      await addUserToFirestore(user);
     })
     .catch((error) => {
       console.error("Error during sign in: ", error);
@@ -24,13 +32,13 @@ export const signInWithGoogle = () => {
 
 export const signUpWithEmailAndPassword = ({user_name, user_pwd}) => {
   createUserWithEmailAndPassword(auth, user_name, user_pwd)
-    .then((result) => {
+    .then(async (result) => {
       // Sign Up
       const user = result.user;
       if (user.displayName === null){
         user.displayName = user.email
       }
-      console.log("User Created", user);
+      await addUserToFirestore(user);
     })
     .catch((error) => {
       console.error("Error during sign up signUpWithEmailAndPassword: ", error);
@@ -46,7 +54,6 @@ export const signInWithCustomEmailAndPassword = ({user_name, user_pwd}) => {
       if (user.displayName === null){
         user.displayName = user.email
       }
-      console.log("User Logged In", user);
     })
     .catch((error) => {
       console.error("Error during sign in signInWithEmailAndPassword: ", error);
@@ -68,8 +75,6 @@ export const sendThePasswordResetEmail = ({user_email}) => {
 
 
 export const confirmThePasswordReset = ({oobCode, new_password}) => {
-  // console.log('confirmThePasswordReset');
-  // console.log(oobCode, new_password);
   confirmPasswordReset(auth, oobCode, new_password)
     .then(() => {
       console.log("Password reset successful!");

@@ -9,6 +9,7 @@
   --experimental-color: #c8e9ff88;
 }
 
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
@@ -35,4 +36,35 @@ button.secondary {
 }
 .exp{
   color: #2c3336;
+}
+
+
+
+.h-full {
+  height: 100%;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+.sidebar {
+  border-right: 1px solid #ccc;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    flex: 2;
+  }
+  .chat {
+    flex: 3;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    flex: 1;
+  }
+  .chat {
+    display: none;
+  }
 }

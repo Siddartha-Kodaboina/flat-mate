@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../../index.css';
+import Loader from '../Loader';
 
 const CommunitiesList = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const city = searchParams.get('city'); // Directly use city from searchParams
+    const city = searchParams.get('city');
     const [flats, setFlats] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activePhotos, setActivePhotos] = useState({});
@@ -28,11 +29,11 @@ const CommunitiesList = () => {
             const response = await fetch(apiUrl);
             const data = await response.json();
             if (response.ok) {
-                const fetchedFlats = data.filteredVacanciesFullDetails || [];
+                const fetchedFlats = data.filteredCommunitiesFullDetails || [];
                 setFlats(fetchedFlats);
                 const initialActivePhotos = {};
                 fetchedFlats.forEach(flat => {
-                    initialActivePhotos[flat.communityObject.id] = 0; // Set first photo as active
+                    initialActivePhotos[flat.id] = 0; // Set first photo as active
                 });
                 setActivePhotos(initialActivePhotos);
             } else {
@@ -60,44 +61,48 @@ const CommunitiesList = () => {
     }
 
     return (
-        <div>
+        <div className="bg-sky-50 p-5 min-h-[90vh]">
             {isLoading ? (
-                <h1>Loading...</h1>
+                <Loader />
             ) : (
                 <div>
-                    <div className='p-5 text-center bg-gradient-to-r from-sky-500 to-indigo-500 '>
+                    <div className='p-5 text-center bg-gradient-to-r from-sky-500 to-indigo-500'>
                         <h1 className='text-white text-lg'>Flats in {city}</h1>
                     </div>
                     {flats.length > 0 ? (
-                        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-4">
                             {flats.map((flat, index) => (
-                                <div key={index} className='m-2 mb-5 cursor-pointer' onClick={()=>handleCommunityClick(flat.communityObject.id)}>
+                                <div 
+                                    key={index} 
+                                    className='m-2 mb-5 cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'
+                                    onClick={() => handleCommunityClick(flat.id)}
+                                >
                                     <img 
                                         className="w-full h-64 object-cover" 
-                                        id={flat.communityObject.id.toString()} 
-                                        src={flat.communityObject.photos[0][2]} 
-                                        alt={flat.communityObject.title} 
+                                        id={flat.id.toString()} 
+                                        src={flat.photos[0]} 
+                                        alt={flat.title} 
                                     />
                                     <div className='relative w-full justify-center flex -mt-4'>
-                                        {flat.communityObject.photos.map((photo, photoIndex) => (
+                                        {flat.photos.map((photo, photoIndex) => (
                                             <button 
                                                 key={photoIndex} 
                                                 className={`mr-2 w-2 h-2 rounded-full ${
-                                                    activePhotos[flat.communityObject.id] === photoIndex ? 'bg-white' : 'bg-gray-300 opacity-50'
+                                                    activePhotos[flat.id] === photoIndex ? 'bg-white' : 'bg-gray-300 opacity-50'
                                                 }`}
-                                                onClick={() => alterCommunityPhoto(flat.communityObject.id.toString(), photoIndex, photo[2])}
+                                                onClick={() => alterCommunityPhoto(flat.id.toString(), photoIndex, photo)}
                                             />
                                         ))}
                                     </div>
-                                    <div className='pl-2 pr-2 flex justify-between   mt-4 text-center'>
-                                        <h1>{flat.communityObject.title}</h1>
-                                        <h3>slots: 1</h3>
+                                    <div className='p-4'>
+                                        <h1 className='text-lg font-semibold'>{flat.title}</h1>
+                                        <h3 className='text-gray-600'>Slots: {flat.openings}</h3>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p>No flats available.</p>
+                        <p className="text-center text-gray-600 mt-4">No flats available.</p>
                     )}
                 </div>
             )}

@@ -15,7 +15,6 @@ const CitySection = () => {
   useEffect(() => {
     const fetchedCities = [
       'austin.jpeg', 
-      
       'new-york.jpeg',
       'san-jose.jpeg',
       'San-Francisco.webp',
@@ -77,7 +76,7 @@ const CitySection = () => {
                 w-full h-full rounded-md p-2 m-2 flex justify-center relative group ">
               <img className="w-[160px] h-[260px] object-cover rounded-md" src={`${reactBaseUrl}/images/cities/${city}`} alt={`City ${index}`} />
               <div className="relative w-[160px] h-[260px]  -ml-[160px] z-[10] 
-                  inset-0 bg-black bg-opacity-50 opacity-75 cursor-pointer border-4 border-red-500 
+                  inset-0 bg-black bg-opacity-50 opacity-75 cursor-pointer 
                   hover:opacity-0 transition-opacity duration-300 rounded-md"
                   onClick={()=>handleCityClick(capitalizeWords(city.split('.')[0]))}>
                     
