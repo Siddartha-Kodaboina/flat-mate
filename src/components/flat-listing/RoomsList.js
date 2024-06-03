@@ -91,8 +91,8 @@ const RoomsList = () => {
     }
   };
 
-  const getRoomsData = async (community_id) => {
-    const rooms_object_api_url = `${nodeBaseUrl}/api/v1/rooms/all/community_id/${community_id}`;
+  const getRoomsData = async (room_id) => {
+    const rooms_object_api_url = `${nodeBaseUrl}/api/v1/rooms/id/${room_id}`;
     try {
       const response = await fetch(rooms_object_api_url);
       if (response.ok) {
@@ -133,22 +133,23 @@ const RoomsList = () => {
         let communityInfoData = await getCommunityInfoData(data[0].communityId);
         setCommunityInfo(communityInfoData);
 
-        let roomsData = await getRoomsData(data[0].communityId);
+        // let roomsData = await getRoomsData(data[0].communityId);
 
         var updatedVacancyRoomsUserList = [];
         if (data.length === undefined) {
           data = [data];
         }
-        if (roomsData.length === undefined) {
-          roomsData = [roomsData];
-        }
-        roomsData = roomsData.slice().reverse(); 
+        // if (roomsData.length === undefined) {
+        //   roomsData = [roomsData];
+        // }
+        // roomsData = roomsData.slice().reverse(); 
         
         const tempViewMore = {};
         for (let i = 0; i < data.length; i++) {
           const creatorsData = await getCreatorsData(data[i].customerId);
+          const roomsData = await getRoomsData(data[i].roomId);
           tempViewMore[data[i].roomId] = false;
-          updatedVacancyRoomsUserList.push({ vacancy: data[i], room: roomsData[i], creator: creatorsData });
+          updatedVacancyRoomsUserList.push({ vacancy: data[i], room: roomsData, creator: creatorsData });
         }
         setViewMoreOn(tempViewMore);
         setVacancyRoomUserList(updatedVacancyRoomsUserList);
