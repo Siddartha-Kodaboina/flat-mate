@@ -285,7 +285,8 @@ const RoomsList = () => {
                   <div className='p-2 flex justify-between items-center'>
                     <h3>{community.address}, {community.city}, {community.state}</h3>
                     <h3 className='cursor-pointer p-1 pl-2 pr-2 border-[1px] border-[#008cff] rounded-lg text-[#008cff] hover:bg-blue-100'>
-                      <a href={`https://www.google.com/maps/search/?query=place_id:${community.place_id}`}>
+                    {/* https://www.google.com/maps/search/?api=1&query=Google&query_place_id=ChIJN1t_tDeuEmsRUsoyG83frY4 */}
+                      <a href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${community.place_id}`}>
                         View in maps <PlaceIcon />
                       </a>
                     </h3>

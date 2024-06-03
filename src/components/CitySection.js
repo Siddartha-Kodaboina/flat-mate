@@ -25,7 +25,7 @@ const CitySection = () => {
       'las-vegas.jpeg',
       'seattle.jpeg',
       'phoenix.jpeg',
-      'tampa.jpeg',
+      'tempe.jpeg',
       'washington-dc.png',
     ];
     setCities(fetchedCities);

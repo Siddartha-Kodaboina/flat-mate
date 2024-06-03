@@ -23,7 +23,7 @@ const Header = () => {
     <div className="header fixed right-0 left-0 top-0 z-10 bg-white shadow-md bg-gradient-to-r from-cyan-500/20 to-blue-500/20 min-h-[10vh] flex flex-col">
       <div className="self-center flex flex-col md:flex-row justify-between w-[92%] mx-auto">
         <div className="flex flex-row justify-between items-center md:flex-row md:justify-between md:items-center min-h-[10vh]">
-          <h2 className="text-[1.5rem] font-bold"><a href="/" className="hover:underline">Flat or Mate</a></h2>
+          <h2 className="text-[1.5rem] font-bold"><a href="/" className="hover:underline">FlatMate</a></h2>
           <div className="md:hidden" onClick={toggleMenu}>
             {isMenuOpen ? <CloseIcon className="text-3xl"/> : <MenuIcon className="text-3xl"/>}
           </div>
