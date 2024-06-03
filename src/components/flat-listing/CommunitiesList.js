@@ -10,6 +10,9 @@ const CommunitiesList = () => {
     const [flats, setFlats] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activePhotos, setActivePhotos] = useState({});
+    const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
+    const itemsPerPage = 9;
+    const totalPages = Math.ceil(flats.length / itemsPerPage);
     const nodeBaseUrl = process.env.REACT_APP_NODE_ENV === 'development' 
         ? process.env.REACT_APP_LOCAL_NODE_BASE_URL
         : process.env.REACT_APP_PRODUCTION_NODE_BASE_URL;
@@ -21,6 +24,10 @@ const CommunitiesList = () => {
             setIsLoading(false);
         }
     }, [city]);
+
+    useEffect(() => {
+        setCurrentPage(parseInt(searchParams.get('page')) || 1);
+    }, [searchParams]);
 
     const fetchFlats = async (city) => {
         setIsLoading(true);
@@ -57,8 +64,45 @@ const CommunitiesList = () => {
     };
 
     const handleCommunityClick = (community_id) => {
-        navigate(`/rooms?community_id=${community_id}`);
+        navigate(`/rooms?community_id=${community_id}&page=1`);
     }
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        navigate(`/communities?city=${city}&page=${newPage}`);
+    };
+
+    const renderPagination = () => {
+        const pages = [];
+        for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+            pages.push(
+                <button
+                    key={i}
+                    className={`p-2 ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return (
+            <div className="flex justify-center space-x-2">
+                {currentPage > 1 && (
+                    <button className="p-2 bg-gray-200" onClick={() => handlePageChange(currentPage - 1)}>
+                        Prev
+                    </button>
+                )}
+                {pages}
+                {currentPage < totalPages && (
+                    <button className="p-2 bg-gray-200" onClick={() => handlePageChange(currentPage + 1)}>
+                        Next
+                    </button>
+                )}
+            </div>
+        );
+    };
+
+    const paginatedFlats = flats.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div className="bg-sky-50 p-5 min-h-[90vh]">
@@ -69,37 +113,29 @@ const CommunitiesList = () => {
                     <div className='p-5 text-center bg-gradient-to-r from-sky-500 to-indigo-500'>
                         <h1 className='text-white text-lg'>Flats in {city}</h1>
                     </div>
-                    {flats.length > 0 ? (
-                        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-4">
-                            {flats.map((flat, index) => (
-                                <div 
-                                    key={index} 
-                                    className='m-2 mb-5 cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'
-                                    onClick={() => handleCommunityClick(flat.id)}
-                                >
-                                    <img 
-                                        className="w-full h-64 object-cover" 
-                                        id={flat.id.toString()} 
-                                        src={flat.photos[0]} 
-                                        alt={flat.title} 
-                                    />
-                                    <div className='relative w-full justify-center flex -mt-4'>
-                                        {flat.photos.map((photo, photoIndex) => (
-                                            <button 
-                                                key={photoIndex} 
-                                                className={`mr-2 w-2 h-2 rounded-full ${
-                                                    activePhotos[flat.id] === photoIndex ? 'bg-white' : 'bg-gray-300 opacity-50'
-                                                }`}
-                                                onClick={() => alterCommunityPhoto(flat.id.toString(), photoIndex, photo)}
-                                            />
-                                        ))}
+                    {paginatedFlats.length > 0 ? (
+                        <div>
+                            <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-4">
+                                {paginatedFlats.map((flat, index) => (
+                                    <div 
+                                        key={index} 
+                                        className='m-2 mb-5 cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'
+                                        onClick={() => handleCommunityClick(flat.id)}
+                                    >
+                                        <img 
+                                            className="w-full h-64 object-cover" 
+                                            id={flat.id.toString()} 
+                                            src={flat.photos[0]} 
+                                            alt={flat.title} 
+                                        />
+                                        <div className='p-4'>
+                                            <h1 className='text-lg font-semibold'>{flat.title}</h1>
+                                            <h3 className='text-gray-600'>Slots: {flat.openings}</h3>
+                                        </div>
                                     </div>
-                                    <div className='p-4'>
-                                        <h1 className='text-lg font-semibold'>{flat.title}</h1>
-                                        <h3 className='text-gray-600'>Slots: {flat.openings}</h3>
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                            {totalPages>1 && renderPagination()}
                         </div>
                     ) : (
                         <p className="text-center text-gray-600 mt-4">No flats available.</p>

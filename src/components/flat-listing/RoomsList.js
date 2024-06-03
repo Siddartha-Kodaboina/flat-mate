@@ -18,6 +18,8 @@ const RoomsList = () => {
   const [activePhoto, setActivePhoto] = useState(0);
   const [viewMoreOn, setViewMoreOn] = useState({});
   const [activeViewMoreId, setActiveViewMoreId] = useState(-1);
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
+  const [totalPages, setTotalPages] = useState(1);
   const nodeBaseUrl = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_NODE_BASE_URL
     : process.env.REACT_APP_PRODUCTION_NODE_BASE_URL;
@@ -59,11 +61,11 @@ const RoomsList = () => {
 
   useEffect(() => {
     if (community_id) {
-      fetchCommunityAndRooms(community_id);
+      fetchCommunityAndRooms(community_id, currentPage);
     } else {
       setIsLoading(false);
     }
-  }, [community_id]);
+  }, [community_id, currentPage]);
 
   const getCommunityData = async (community_id) => {
     const community_object_api_url = `${nodeBaseUrl}/api/v1/communities/id/${community_id}`;
@@ -117,7 +119,7 @@ const RoomsList = () => {
     }
   };
 
-  const fetchCommunityAndRooms = async (community_id) => {
+  const fetchCommunityAndRooms = async (community_id, page) => {
     setIsLoading(true);
     const community_api_url = `${nodeBaseUrl}/api/v1/vacancies/all/community_id/${community_id}`;
     try {
@@ -127,23 +129,23 @@ const RoomsList = () => {
         if (!data.length) {
           return;
         }
+
+        const totalItems = data.length;
+        const itemsPerPage = 5;
+        setTotalPages(Math.ceil(totalItems / itemsPerPage));
+        data = data.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
         const communityData = await getCommunityData(data[0].communityId);
         setCommunity(communityData);
 
         let communityInfoData = await getCommunityInfoData(data[0].communityId);
         setCommunityInfo(communityInfoData);
 
-        // let roomsData = await getRoomsData(data[0].communityId);
-
         var updatedVacancyRoomsUserList = [];
         if (data.length === undefined) {
           data = [data];
         }
-        // if (roomsData.length === undefined) {
-        //   roomsData = [roomsData];
-        // }
-        // roomsData = roomsData.slice().reverse(); 
-        
+
         const tempViewMore = {};
         for (let i = 0; i < data.length; i++) {
           const creatorsData = await getCreatorsData(data[i].customerId);
@@ -217,21 +219,11 @@ const RoomsList = () => {
         id: doc.id,
         ...doc.data()
       }));
-
-      const creatorConversationsQuery = query(
-        collection(db, 'conversations'),
-        where('participants', 'array-contains', creatorId)
-      );
-      const creatorConversationsSnapshot = await getDocs(creatorConversationsQuery);
-      const creatorConversations = creatorConversationsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
+  
       const existingConversation = userConversations.find(convo =>
         convo.participants.includes(creatorId)
       );
-
+  
       let conversationId;
       if (existingConversation) {
         conversationId = existingConversation.id;
@@ -241,16 +233,55 @@ const RoomsList = () => {
           latestMessage: {
             message: '',
             timestamp: null
+          },
+          lastSeenMessages: {
+            [auth.currentUser.uid]: null,
+            [creatorId]: null
           }
         };
         const docRef = await addDoc(collection(db, 'conversations'), newConversation);
         conversationId = docRef.id;
       }
-
+  
       navigate(`/messaging?conversationId=${conversationId}`);
     } catch (error) {
       console.error('Error handling send message:', error);
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    navigate(`/rooms?community_id=${community_id}&page=${newPage}`);
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`p-2 ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    return (
+      <div className="flex justify-center space-x-2">
+        {currentPage > 1 && (
+          <button className="p-2 bg-gray-200" onClick={() => handlePageChange(currentPage - 1)}>
+            Prev
+          </button>
+        )}
+        {pages}
+        {currentPage < totalPages && (
+          <button className="p-2 bg-gray-200" onClick={() => handlePageChange(currentPage + 1)}>
+            Next
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -286,7 +317,6 @@ const RoomsList = () => {
                   <div className='p-2 flex justify-between items-center'>
                     <h3>{community.address}, {community.city}, {community.state}</h3>
                     <h3 className='cursor-pointer p-1 pl-2 pr-2 border-[1px] border-[#008cff] rounded-lg text-[#008cff] hover:bg-blue-100'>
-                    {/* https://www.google.com/maps/search/?api=1&query=Google&query_place_id=ChIJN1t_tDeuEmsRUsoyG83frY4 */}
                       <a href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${community.place_id}`}>
                         View in maps <PlaceIcon />
                       </a>
@@ -406,6 +436,7 @@ const RoomsList = () => {
                   </div>
                 ))}
               </div>
+              {totalPages>1 && renderPagination()}
             </div>
           </div>
         </div>

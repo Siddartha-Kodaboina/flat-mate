@@ -3,11 +3,12 @@ import { collection, getDocs, query, where, orderBy, addDoc, doc, getDoc } from 
 import { auth, db } from '../../config/firebaseConfig';
 import UserSearch from './UserSearch';
 
-const Sidebar = ({ onSelectConversation }) => {
+const Sidebar = ({ onSelectConversation, selectedConversationId }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [userPhotos, setUserPhotos] = useState({});
+  const [unseenMessages, setUnseenMessages] = useState({});
 
   useEffect(() => {
     const fetchUserNamesAndPhotos = async (uids) => {
@@ -49,6 +50,34 @@ const Sidebar = ({ onSelectConversation }) => {
 
       await fetchUserNamesAndPhotos(uids);
       setConversations(conversationsData);
+
+      // Fetch unseen messages count for each conversation
+      const unseenMessagesData = {};
+      for (const conversation of conversationsData) {
+        const lastSeenMessageId = conversation.lastSeenMessages[auth.currentUser.uid];
+        if (lastSeenMessageId) {
+          const lastSeenMessageDoc = await getDoc(doc(db, 'messages', lastSeenMessageId));
+          if (lastSeenMessageDoc.exists()) {
+            const lastSeenMessageTimestamp = lastSeenMessageDoc.data().timestamp;
+
+            const messagesQuery = query(
+              collection(db, 'messages'),
+              where('conversationId', '==', conversation.id),
+              where('timestamp', '>', lastSeenMessageTimestamp),
+              orderBy('timestamp')
+            );
+
+            const messagesSnapshot = await getDocs(messagesQuery);
+            const unseenCount = messagesSnapshot.size;
+            unseenMessagesData[conversation.id] = unseenCount;
+          } else {
+            unseenMessagesData[conversation.id] = 0;
+          }
+        } else {
+          unseenMessagesData[conversation.id] = 0;
+        }
+      }
+      setUnseenMessages(unseenMessagesData);
     };
 
     fetchConversations();
@@ -75,6 +104,10 @@ const Sidebar = ({ onSelectConversation }) => {
           message: '',
           senderId: '',
           timestamp: null
+        },
+        lastSeenMessages: {
+          [auth.currentUser.uid]: null,
+          [user.uid]: null
         }
       };
       const docRef = await addDoc(collection(db, 'conversations'), newConversation);
@@ -110,11 +143,13 @@ const Sidebar = ({ onSelectConversation }) => {
           const lastMessage = truncateMessage(conversation.latestMessage.message, 64);
           const lastMessageSender = conversation.latestMessage.senderId === auth.currentUser.uid ? 'You' : otherUserName;
           const timestamp = conversation.latestMessage.timestamp ? conversation.latestMessage.timestamp : null;
+          const unseenCount = unseenMessages[conversation.id] || 0;
+
           return (
             <li 
               key={conversation.id} 
               onClick={() => onSelectConversation(conversation.id)}
-              className="p-2 border border-gray-200 rounded-md hover:bg-gray-100 cursor-pointer flex items-center space-x-4"
+              className={`p-2 border border-gray-200 rounded-md hover:bg-gray-100 cursor-pointer flex items-center space-x-4 ${conversation.id === selectedConversationId ? 'bg-blue-200' : ''}`}
             >
               <img src={otherUserPhoto} alt={otherUserName} className="w-10 h-10 rounded-full object-cover" />
               <div className="flex-1">
@@ -122,8 +157,13 @@ const Sidebar = ({ onSelectConversation }) => {
                     <div className="font-bold">{otherUserName}</div>
                     <div className="text-xs text-gray-400">{timestamp ? formatDate(timestamp) : ''}</div>
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="flex justify-between text-sm text-gray-500">
                   {lastMessageSender}: {lastMessage}
+                  {unseenCount > 0 && (
+                    <span className="ml-2 bg-blue-500 text-white rounded-full px-2 py-1 text-xs">
+                      <p>{unseenCount}</p>
+                    </span>
+                  )}
                 </div>
               </div>
             </li>
@@ -135,4 +175,3 @@ const Sidebar = ({ onSelectConversation }) => {
 };
 
 export default Sidebar;
-

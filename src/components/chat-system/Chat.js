@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { collection, query, where, orderBy, onSnapshot, addDoc, getDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, addDoc, getDoc, doc, updateDoc, limit, getDocs } from 'firebase/firestore';
 import { db, auth } from '../../config/firebaseConfig';
 
 const Chat = ({ conversationId }) => {
@@ -28,6 +28,14 @@ const Chat = ({ conversationId }) => {
       if (conversationDoc.exists()) {
         const participants = conversationDoc.data().participants;
         await fetchUsers(participants);
+
+        // Update the last seen message for the current user
+        const lastMessage = await getLastMessage(conversationId);
+        if (lastMessage && lastMessage.id) {
+          await updateDoc(doc(db, 'conversations', conversationId), {
+            [`lastSeenMessages.${auth.currentUser.uid}`]: lastMessage.id
+          });
+        }
       }
     };
 
@@ -63,14 +71,16 @@ const Chat = ({ conversationId }) => {
         timestamp: new Date()
       };
 
-      await addDoc(collection(db, 'messages'), newMessageData);
+      const newMessageRef = await addDoc(collection(db, 'messages'), newMessageData);
 
       // Update the latest message in the conversation
       await updateDoc(doc(db, 'conversations', conversationId), {
-        latestMessage: newMessageData
+        latestMessage: newMessageData,
+        [`lastSeenMessages.${auth.currentUser.uid}`]: newMessageRef.id
       });
 
       setNewMessage('');
+      // setTimeout(scrollToBottom, 100);
       scrollToBottom();
     }
   };
@@ -94,7 +104,8 @@ const Chat = ({ conversationId }) => {
 
   return (
     <div className="flex-1 p-4 flex flex-col bg-sky-100 h-full">
-      <div className="flex-1 overflow-y-scroll border border-gray-300 rounded-md p-4 mb-4 flex flex-col-reverse">
+      <div className="flex-1 overflow-y-scroll border border-gray-300 rounded-md p-4 mb-4 flex flex-col-reverse hide-scrollbar">
+        <div className='' ref={messagesEndRef} />
         {messages.slice().reverse().map((msg) => (
           <div
             key={msg.id}
@@ -104,7 +115,6 @@ const Chat = ({ conversationId }) => {
             <div className="text-xs text-gray-500">{formatDate(msg.timestamp)}</div>
           </div>
         ))}
-        <div ref={messagesEndRef} />
       </div>
       <div className="flex-shrink-0 p-4">
         <div className="flex">
@@ -126,6 +136,19 @@ const Chat = ({ conversationId }) => {
       </div>
     </div>
   );
+};
+
+const getLastMessage = async (conversationId) => {
+  const messagesQuery = query(
+    collection(db, 'messages'),
+    where('conversationId', '==', conversationId),
+    orderBy('timestamp', 'desc'),
+    limit(1)
+  );
+
+  const messagesSnapshot = await getDocs(messagesQuery);
+  const lastMessage = messagesSnapshot.docs[0]?.data();
+  return lastMessage ? { id: messagesSnapshot.docs[0].id, ...lastMessage } : null;
 };
 
 export default Chat;

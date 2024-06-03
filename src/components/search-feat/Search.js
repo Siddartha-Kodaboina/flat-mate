@@ -17,15 +17,15 @@ const Search = () => {
         : process.env.REACT_APP_PRODUCTION_NODE_BASE_URL;
 
     const handleSearch = async (query) => {
-        setLoading(true); // Show loader
-        setNoResults(false); // Reset no results state
-        setSearchParams({ query }); // Update the query string in the URL
+        setLoading(true);
+        setNoResults(false);
+        setSearchParams({ query, page: 1 });
 
         try {
             const response = await fetch(`${nodeBaseUrl}/api/v1/search?query=${encodeURIComponent(query)}`);
             const data = await response.json();
             if (!Array.isArray(data) || data.length === 0) {
-                setNoResults(true); // Set no results state
+                setNoResults(true);
             } else {
                 setSearchResults(data);
             }
@@ -33,7 +33,7 @@ const Search = () => {
             console.error("Error fetching search results:", error);
         }
 
-        setLoading(false); // Hide loader
+        setLoading(false);
     };
 
     useEffect(() => {

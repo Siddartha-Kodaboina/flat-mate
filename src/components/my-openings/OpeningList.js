@@ -12,7 +12,7 @@ const OpeningList = ({ openings, isCurrent, onClose, isClosing }) => {
 
   return (
     <div className="opening-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-      {openings.map((opening) => (
+      {openings.slice().reverse().map((opening) => (
         <OpeningCard key={opening.id} opening={opening} isCurrent={isCurrent} onClose={onClose} isClosing={isClosing} />
       ))}
     </div>

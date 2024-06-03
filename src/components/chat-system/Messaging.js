@@ -28,7 +28,7 @@ const Messaging = () => {
       {selectedConversationId ? (
         <>
           <div className="lg:w-2/5 w-full h-full hidden lg:flex border-r border-gray-300">
-            <Sidebar onSelectConversation={handleSelectConversation} />
+            <Sidebar onSelectConversation={handleSelectConversation} selectedConversationId={selectedConversationId} />
           </div>
           <div className="lg:w-3/5 w-full h-full flex">
             <Chat conversationId={selectedConversationId} />
@@ -37,7 +37,7 @@ const Messaging = () => {
       ) : (
         <div className="flex w-full h-full">
           <div className="lg:w-2/5 w-full h-full border-r border-gray-300">
-            <Sidebar onSelectConversation={handleSelectConversation} />
+            <Sidebar onSelectConversation={handleSelectConversation} selectedConversationId={selectedConversationId} />
           </div>
           <div className="hidden lg:flex items-center justify-center w-full">
             <div className="text-center text-gray-500">
