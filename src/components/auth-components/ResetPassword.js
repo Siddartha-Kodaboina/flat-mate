@@ -38,7 +38,7 @@ const ResetPassword = () => {
   return (
     <div className="login-main">
         <div className="content-wrapper">
-            <div className="left-wrapper">
+            {/* <div className="left-wrapper">
                 <div className="left-content-wrapper">
                     <div className="image-wrapper">
                         <img src="./images/login-working-guy.png" alt="Working Kid" />
@@ -48,27 +48,39 @@ const ResetPassword = () => {
                         <p>Unleash Your Academic and Professional Success with Get It Done Club's Productivity Excellence Platform</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <div className="right-wrapper">
                 <div className="right-content-wrapper">
                     <div className="logo-title">
-                        <h2>Get It Done ✅</h2>
+                        <h1>FlatMate 🏘️</h1>
                     </div>
                     <div className="login-form">
 
                         {
                             reset &&
                             <div className="reset-message">
-                                <p>Password reset successful!</p>
+                                <p>Password reset successful! And, Please Login with new password!</p>
                             </div>
                         }
                         <div className="password-1">
+                            <input 
+                                type="password" 
+                                name="password" 
+                                placeholder="Enter your new password"
+                                value={credentials.password} 
+                                onChange={handleChange}  
+                            />
                             <label htmlFor="">Enter your new password</label>
-                            <input type="password" name="password" value={credentials.password} onChange={handleChange}  />
                         </div>
                         <div className="password-2">
+                            <input 
+                                type="password" 
+                                name="confirmPassword" 
+                                placeholder="Confirm your new password"
+                                value={credentials.confirmPassword} 
+                                onChange={handleChange}  
+                            />
                             <label htmlFor="">Confirm your new password</label>
-                            <input type="password" name="confirmPassword" value={credentials.confirmPassword} onChange={handleChange}  />
                         </div>
                         
                         <div className="reset-submit">
@@ -76,9 +88,9 @@ const ResetPassword = () => {
                         </div>
                         
                     </div>
-                    {/* <div className="create-account">
+                    <div className="create-account">
                         <a href="/login">Back to Login</a> 
-                    </div> */}
+                    </div>
                 </div>
             </div>
         </div>

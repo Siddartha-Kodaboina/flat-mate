@@ -39,7 +39,7 @@ const ForgotPassword = () => {
   return (
     <div className="login-main">
         <div className="content-wrapper">
-            <div className="left-wrapper">
+            {/* <div className="left-wrapper">
                 <div className="left-content-wrapper">
                     <div className="image-wrapper">
                         <img src="./images/login-working-guy.png" alt="Working Kid" />
@@ -49,23 +49,29 @@ const ForgotPassword = () => {
                         <p>Unleash Your Academic and Professional Success with Get It Done Club's Productivity Excellence Platform</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <div className="right-wrapper">
                 <div className="right-content-wrapper">
                     <div className="logo-title">
-                        <h2>Get It Done ✅</h2>
+                        <h1>FlatMate 🏘️</h1>
                     </div>
                     <div className="login-form">
 
                         {
                             sent &&
                             <div className="sent-message">
-                                <p>Password reset email sent!</p>
+                                <p>Password reset email sent! Please check your email!</p>
                             </div>
                         }
                         <div className="user-email">
-                            <label htmlFor="">Enter your email</label>
-                            <input type="email" name="user_email" value={credentials.user_email} onChange={handleChange}  />
+                            <input 
+                                type="email" 
+                                name="user_email" 
+                                placeholder="Enter your email address"
+                                value={credentials.user_email} 
+                                onChange={handleChange}  
+                            />
+                            <label htmlFor="">Enter your email address</label>
                         </div>
                         
                         <div className="sign-in-button">

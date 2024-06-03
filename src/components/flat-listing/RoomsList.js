@@ -141,10 +141,8 @@ const RoomsList = () => {
         }
         if (roomsData.length === undefined) {
           roomsData = [roomsData];
-          console.log("in rooms length undefined" );
         }
         roomsData = roomsData.slice().reverse(); 
-        console.log("outside rooms length undefined" );
         
         const tempViewMore = {};
         for (let i = 0; i < data.length; i++) {

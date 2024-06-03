@@ -16,7 +16,7 @@ const OpeningCard = ({ opening, isCurrent, onClose, isClosing }) => {
   const handleCloseClick = async (e) => {
     e.stopPropagation();
     try {
-      const response = await fetch(`${nodeBaseUrl}/api/v1/vacancies/close/${opening.id}`, {
+      const response = await fetch(`${nodeBaseUrl}/api/v1/vacancies/close/${opening.id}?place_id=${opening.Community.place_id}`, {
         method: 'POST',
       });
       if (response.ok) {

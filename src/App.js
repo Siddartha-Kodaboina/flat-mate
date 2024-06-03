@@ -17,6 +17,7 @@ import Login from './components/auth-components/Login';
 import ForgotPassword from './components/auth-components/ForgotPassword';
 import ResetPassword from './components/auth-components/ResetPassword';
 import MyOpenings from './components/my-openings/MyOpenings';
+import Loader from './components/Loader';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
@@ -54,14 +55,14 @@ function App() {
   }, [user]);
 
   if (!isMapsScriptLoaded || (!user && !isAuthCheckComplete)) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
     <div className="App poppins-regular">
       <div className="routes pt-[10vh]">
         <Router>
-          <Header />
+          {user && <Header />}
           <Routes>
             <Route path="/" element={user ? <Home /> : <Navigate replace to="/login" />} />
             <Route path="/test-firebase" element={user ? <TestFirebase /> : <Navigate replace to="/login" />} />
