@@ -21,6 +21,10 @@ const Header = () => {
     return location.pathname.startsWith(path);
   };
 
+  if (isActive('/login')){
+    return <></>
+  }
+
   return (
     <div className="header fixed right-0 left-0 top-0 z-10 bg-white shadow-md bg-gradient-to-r from-cyan-500/20 to-blue-500/20 min-h-[10vh] flex flex-col">
       <div className="self-center flex flex-col md:flex-row justify-between w-[92%] mx-auto">
