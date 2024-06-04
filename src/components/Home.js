@@ -27,7 +27,7 @@ const Home = () => {
                 Discover budget-friendly living: your gateway to affordable, shared housing 
                 tailored for international students. Save on rent, cherish camaraderie, and enjoy well-furnished spaces. 
                 Find the perfect match for your preferences — be it a student or a 
-                professional, vegetarian or non-vegetarian. Join FlatORMate and transform your housing experience. <br /> Welcome home 👊!
+                professional, vegetarian or non-vegetarian. Join FlatMate and transform your housing experience. <br /> Welcome home 👊!
                 <span className='font-extrabold'>''</span>
               </p>
               

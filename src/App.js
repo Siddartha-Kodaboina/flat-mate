@@ -18,6 +18,7 @@ import ForgotPassword from './components/auth-components/ForgotPassword';
 import ResetPassword from './components/auth-components/ResetPassword';
 import MyOpenings from './components/my-openings/MyOpenings';
 import Loader from './components/Loader';
+import About from './components/About';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
@@ -62,7 +63,7 @@ function App() {
     <div className="App poppins-regular">
       <div className="routes pt-[10vh]">
         <Router>
-          {user && <Header />}
+          {<Header />}
           <Routes>
             <Route path="/" element={user ? <Home /> : <Navigate replace to="/login" />} />
             <Route path="/test-firebase" element={user ? <TestFirebase /> : <Navigate replace to="/login" />} />
@@ -78,6 +79,7 @@ function App() {
             <Route path="/login" element={!user ? <Login /> : <Navigate replace to="/" />} />
             <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate replace to="/" />} />
             <Route path="/reset-password" element={!user ? <ResetPassword /> : <Navigate replace to="/" />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </Router>
       </div>
