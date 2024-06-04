@@ -61,7 +61,7 @@ const CitySection = () => {
   return (
     <div className="relative flex items-center overflow-hidden my-8">
       <button
-        className="absolute left-0 z-10 bg-black bg-opacity-50 text-white p-4 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300"
+        className="absolute left-0 z-[15] bg-black bg-opacity-50 text-white p-4 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300"
         onClick={() => handleScroll('left')}
       >
         {leftArrow}
