@@ -177,7 +177,7 @@ const Community = () => {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="from" className="block text-sm font-medium text-gray-700">Community Title<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="from" className="block text-sm font-medium text-gray-700">Community Title (Must be registered on the google maps)<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
               name="title" 
@@ -191,7 +191,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-              <label htmlFor="to" className="block text-sm font-medium text-gray-700">Address<span className='text-rose-600 ml-1'>*</span></label>
+              <label htmlFor="to" className="block text-sm font-medium text-gray-700">Address (must be autofilled)<span className='text-rose-600 ml-1'>*</span></label>
               <input 
                 type="text"
                 name="address" 
@@ -204,7 +204,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">City<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="city" className="block text-sm font-medium text-gray-700">City (must be autofilled)<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
               name="city" 
@@ -217,7 +217,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="state" className="block text-sm font-medium text-gray-700">State<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="state" className="block text-sm font-medium text-gray-700">State (must be autofilled)<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
               name="state" 
@@ -230,7 +230,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700">Postal Code<span className='text-rose-600 ml-1'>*</span></label>
+            <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700">Postal Code (must be autofilled)<span className='text-rose-600 ml-1'>*</span></label>
             <input 
               type="text" 
               name="postal_code" 
@@ -270,7 +270,7 @@ const Community = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="averageRent" className="block text-sm font-medium text-gray-700">Average Rent in the community</label>
+            <label htmlFor="averageRent" className="block text-sm font-medium text-gray-700">Average Rent in the community (Only digits)</label>
             <input 
               type="text" 
               name="averageRent" 

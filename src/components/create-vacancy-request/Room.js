@@ -327,7 +327,7 @@ const Room = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="do" className="block text-sm font-medium text-gray-700">Room Specific Dos</label>
+            <label htmlFor="do" className="block text-sm font-medium text-gray-700">Room Specific Do's</label>
             <div className="relative">
               <button type="button" onClick={() => setIsDoDropdownOpen(!isDoDropdownOpen)} className="mt-1 block bg-white w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-left">
                 {selectedDo.length > 0 ? selectedDo.join(', ') : "Select Room Specific Dos"}

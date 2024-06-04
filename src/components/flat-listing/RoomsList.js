@@ -353,7 +353,10 @@ const RoomsList = () => {
               <div className="p-2 mb-4 bg-white shadow rounded-md mt-4" name="what-people-are-saying">
                 <h1 className='p-2 text-xl mb-2 font-semibold'>What Residents are Saying</h1>
                 <div className={`mb-2 flex ${isDescriptionModalOpen ? 'hidden' : 'flex-row'} justify-around items-center flex-wrap`} name='descriptions-box'>
-                  {communityInfo.communityDescription.split('*$%!&^$#').slice(0, window.innerWidth > 768 ? 2 : 1).map((description, index) => (
+                  {communityInfo.communityDescription.split('*$%!&^$#')
+                  .filter(description => description.trim()!=='')
+                  .slice(0, window.innerWidth > 768 ? 2 : 1)
+                  .map((description, index) => (
                     <div key={index} className='border-[1px] border-[rgba(0,0,0,0.1)] p-2 rounded-[10px] flex flex-col justify-center items-center shadow-[0_3px_10px_-2px_rgba(0,0,0,0.25)] bg-gray-100' name='description'>
                       <h2 className="text-sm text-gray-700">{description}</h2>
                     </div>
@@ -365,11 +368,13 @@ const RoomsList = () => {
                 <div className="absolute top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 z-50 flex justify-center items-center" ref={descriptionModalRef}>
                   <div className="bg-white p-4 rounded-lg w-[80%] max-w-lg md:max-w-3xl h-[60%] md:h-auto overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button onClick={toggleDescriptionModal} className="absolute top-2 right-2 text-2xl text-gray-700 hover:text-gray-900">&#10005;</button>
-                    {communityInfo.communityDescription.split('*$%!&^$#').map((description, index) => (
-                      <div key={index} className='border-[1px] border-[rgba(0,0,0,0.1)] p-2 rounded-[10px] flex flex-col justify-center items-center space-y-2 shadow-[0_3px_10px_-2px_rgba(0,0,0,0.25)] bg-gray-100' name='description'>
-                        <h2 className="text-sm text-gray-700">{description}</h2>
-                      </div>
-                    ))}
+                    {communityInfo.communityDescription.split('*$%!&^$#')
+                      .filter(description => description.trim()!=='')
+                      .map((description, index) => {
+                        return (<div key={index} className='border-[1px] border-[rgba(0,0,0,0.1)] p-2 rounded-[10px] flex flex-col justify-center items-center space-y-2 shadow-[0_3px_10px_-2px_rgba(0,0,0,0.25)] bg-gray-100' name='description'>
+                          <h2 className="text-sm text-gray-700">{description}</h2>
+                        </div>)
+                      })}
                     <button onClick={toggleDescriptionModal} className="col-span-1 md:col-span-2 bg-black text-white rounded p-2 m-4 hover:bg-gray-900">Close</button>
                   </div>
                 </div>
