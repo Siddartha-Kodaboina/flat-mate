@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-  <img src="URL_TO_LOGO_IMAGE" alt="Flatmate.pro Logo">
+  <img src="./images/home.png" alt="Flatmate.pro Logo">
   <h1 align="center">Flatmate.pro</h1>
   <p align="center">
     Connecting People for Shared Housing Solutions
@@ -13,7 +13,7 @@
 
 ## Table of Contents
 - [About the Project](#about-the-project)
-- [Technology Stack](#technology-stack)
+- [Technology Stack and Architecture](#technology-stack)
 - [Screenshots](#screenshots)
 - [License](#license)
 
