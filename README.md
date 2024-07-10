@@ -11,7 +11,7 @@
 
 ## Table of Contents
 - [About the Project](#about-the-project)
-- [Technology Stack and Architecture](#technology-stack)
+- [Technology Stack and Architecture](#technology-stack-and-architecture)
 - [Screenshots](#screenshots)
 - [License](#license)
 
