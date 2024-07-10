@@ -1,13 +1,11 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-  <img src="./images/home.png" alt="Flatmate.pro Logo">
+  <img src="./images/home1.png" alt="Flatmate.pro Logo">
   <h1 align="center">Flatmate.pro</h1>
   <p align="center">
     Connecting People for Shared Housing Solutions
     <br />
     <a href="https://flatmate.pro">Website</a>
-    ·
-    <a href="https://github.com/flatmate/pro/issues">Issues</a>
   </p>
 </p>
 
@@ -76,7 +74,7 @@ This project leverages a variety of technologies to deliver a full-fledged solut
 ![Login](./images/login.png)
 
 ### Home
-![Home](./images/home.png)
+![Home](./images/home1.png)
 
 ### Popular Destinations
 ![Popular Destinations](./images/popular_destinations.png)
