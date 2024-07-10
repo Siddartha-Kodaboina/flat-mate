@@ -12,6 +12,8 @@
 ## Table of Contents
 - [About the Project](#about-the-project)
 - [Technology Stack and Architecture](#technology-stack-and-architecture)
+- [REST API](#rest-api)
+- [Database Information](#database-information)
 - [Screenshots](#screenshots)
 - [License](#license)
 
@@ -22,21 +24,14 @@ flatmate.pro is a centralized platform designed to connect people looking for sh
 ### The Problem
 
 International students and others in shared housing often face challenges when roommates move out:
-
 - Uncertainty about continuing leases
 - Limited reach when searching for new roommates
 - Disorganized communication across multiple platforms
 - Lack of detailed information about available housing
 
 ### Solution
+
 Flatmate.pro offers a robust platform that simplifies finding and communicating with potential roommates. Our dedicated platform expands your reach, streamlines communications, and provides detailed listings, transforming the experience of securing shared housing.
-
-flatmate.pro addresses these issues by providing:
-
-- A dedicated platform for listing and finding shared housing
-- Wide reach to potential roommates
-- Streamlined in-app communication
-- Detailed listings with comprehensive information
 
 ## Features
 
@@ -49,7 +44,6 @@ flatmate.pro addresses these issues by providing:
 ## Technology Stack and Architecture
 
 This project leverages a variety of technologies to deliver a full-fledged solution for housing needs:
-
 - **Frontend:** React.js for a dynamic and responsive UI.
 - **Backend:** Node.js with Express for RESTful API services.
 - **Database:**
@@ -61,12 +55,191 @@ This project leverages a variety of technologies to deliver a full-fledged solut
 ### Architecture
 
 ![Application Architecture](./images/application_architecture.png)
-
 ![CI/CD Architecture](./images/cicd_architecture.png)
-
 ![User Authentication Flowchart](./images/user_authentication_flowchart.png)
-
 ![Adding Vacancy Request in DB](./images/adding_vacancy_request_db.png)
+
+## REST API
+
+### Customer
+- `GET /customers/`: List all customers.
+- `POST /customers/`: Create a new customer.
+- `GET /customers/:uid`: Fetch a customer by UID.
+- `GET /customers/:id`: Fetch a customer by ID.
+- `PUT /customers/:uid`: Update a customer by UID.
+- `PUT /customers/:id`: Update a customer by ID.
+- `DELETE /customers/:uid`: Delete a customer by UID.
+- `DELETE /customers/:id`: Delete a customer.
+
+### Room
+- `GET /rooms/`: List all rooms.
+- `POST /rooms/`: Create a new room.
+- `GET /rooms/community/:community_id`: Get rooms by community ID.
+- `GET /rooms/:id`: Get a room by ID.
+- `PUT /rooms/community/:community_id`: Update rooms by community ID.
+- `PUT /rooms/:id`: Update a room.
+- `DELETE /rooms/community/:community_id`: Delete rooms by community ID.
+- `DELETE /rooms/:id`: Delete a room.
+
+### Vacancy
+- `GET /vacancies/`: List all vacancies.
+- `POST /vacancies/`: Create a new vacancy.
+- `GET /vacancies/filters`: List vacancies by filters.
+- `GET /vacancies/community/:community_id`: Get vacancies by community ID.
+- `GET /vacancies/:id`: Get a vacancy by ID.
+- `PUT /vacancies/community/:community_id`: Update vacancies by community ID.
+- `PUT /vacancies/:id`: Update a vacancy.
+- `DELETE /vacancies/community/:community_id`: Delete vacancies by community ID.
+- `DELETE /vacancies/:id`: Delete a vacancy.
+- `POST /vacancies/close/:id`: Close a vacancy.
+
+### Openings
+- `GET /openings/:userId/current`: Get current openings by user ID.
+- `GET /openings/:userId/closed`: Get closed openings by user ID.
+- `PUT /openings/place/:place_id/decrement`: Decrement openings by place ID.
+
+## Database Information
+
+### PostgreSQL Tables
+
+#### Community Table
+
+| Column Name   | Data Type |
+|---------------|-----------|
+| id            | integer   |
+| title         | string    |
+| address       | string    |
+| city          | string    |
+| state         | string    |
+| zipcode       | string    |
+| photo_urls    | array     |
+| place_id      | string    |
+| state_code    | string    |
+| country       | string    |
+| country_code  | string    |
+| openings      | integer   |
+
+#### Room Table
+
+| Column Name     | Data Type |
+|-----------------|-----------|
+| id              | integer   |
+| community_id    | integer   |
+| bedrooms_count  | integer   |
+| bathrooms_count | integer   |
+| male_adults     | integer   |
+| female_adults   | integer   |
+| sharing_type    | string    |
+| monthly_rent    | decimal   |
+| utilities_cost  | decimal   |
+| amenities       | array     |
+| do              | string    |
+| dont            | string    |
+| description     | text      |
+| photo_urls      | array     |
+
+#### Customer Table
+
+| Column Name    | Data Type |
+|----------------|-----------|
+| id             | integer   |
+| first_name     | string    |
+| last_name      | string    |
+| display_name   | string    |
+| mobile_number  | string    |
+| email          | string    |
+| uuid           | string    |
+| dp_url         | string    |
+
+#### Vacancy Table
+
+| Column Name        | Data Type |
+|--------------------|-----------|
+| id                 | integer   |
+| customer_id        | integer   |
+| community_id       | integer   |
+| room_id            | integer   |
+| from_date          | date      |
+| to_date            | date      |
+| tenant_requirements| text      |
+| createdAt          | timestamp |
+| updatedAt          | timestamp |
+| status             | string    |
+
+### MongoDB Collections
+
+#### Conversations Collection
+An example document from the `Conversations` collection:
+
+```
+{
+  "_id": "unique_conversation_id",
+  "participants": ["user_id_1", "user_id_2"],
+  "latestMessage": {
+    "message": "Hello, are you still looking for a roommate?",
+    "senderId": "user_id_1",
+    "timestamp": "2024-07-10T14:48:00.000Z"
+  }
+}
+```
+
+This collection includes fields indexing participant IDs and the latest message timestamp for efficient retrieval of conversation data.
+
+#### Messages Collection
+An example document from the Messages collection:
+
+```
+{
+  "_id": "unique_message_id",
+  "conversationId": "unique_conversation_id",
+  "message": "Yes, I'm still looking! Are you interested?",
+  "senderId": "user_id_2",
+  "timestamp": "2024-07-10T15:00:00.000Z"
+}
+```
+Fields in this collection are indexed by conversation ID and timestamp to optimize the performance of message fetching operations.
+
+#### Users Collection
+An example document from the Users collection:
+
+```
+{
+  "_id": "user_id_1",
+  "displayName": "John Doe",
+  "email": "john.doe@example.com",
+  "photoURL": "http://example.com/path/to/photo.jpg"
+}
+```
+This collection stores user information, including display names, email addresses, and profile photos.
+
+## Database Indexing
+
+### PostgreSQL Indices
+
+Indexing in PostgreSQL is used to enhance database performance. Here are some key indices:
+
+- **Customer Email Index**: An index on the `email` column of the `Customer` table to speed up look-up operations based on the email.
+  - **Table**: Customer
+  - **Column**: email
+- **Customer ID Index**: An index on the `id` column of the `Customer` table to facilitate rapid retrieval operations using the customer ID.
+  - **Table**: Customer
+  - **Column**: id
+
+### MongoDB Indices
+
+MongoDB utilizes indexing to improve the performance of queries involving large amounts of data. Specific indices include:
+
+- **Conversation ID Index**: Facilitates efficient querying and updates within the `Conversations` collection based on conversation IDs.
+  - **Collection**: Conversations
+  - **Field**: _id
+- **Message Timestamp Index**: Optimizes queries within the `Messages` collection that sort or filter by the message timestamp.
+  - **Collection**: Messages
+  - **Field**: timestamp
+- **User ID Index**: Enhances performance for user look-ups in the `Users` collection.
+  - **Collection**: Users
+  - **Field**: _id
+
+Each of these indices is crucial for maintaining quick response times and efficient data retrieval across the database system used in flatmate.pro.
 
 ## Screenshots
 
@@ -89,75 +262,8 @@ This project leverages a variety of technologies to deliver a full-fledged solut
 ![Search](./images/search.png)
 
 ### Create Vacancy
-![ Create Vacancy](./images/create.png)
+![Create Vacancy](./images/create.png)
 
-# Getting Started with Create React App
+## License
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Distributed under the MIT License. See `LICENSE` for more information.
